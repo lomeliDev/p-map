@@ -896,6 +896,11 @@ test('stopOnError: false reports the errors in input order', async t => {
 	t.deepEqual([...orders], ['boom 0,boom 1,boom 2,boom 3,boom 4']);
 });
 
+test('the control symbols describe themselves by their exported name', t => {
+	t.is(pMapSkip.description, 'pMapSkip');
+	t.is(pMapStop.description, 'pMapStop');
+});
+
 test('pMapSkip', async t => {
 	t.deepEqual(await pMap([
 		1,

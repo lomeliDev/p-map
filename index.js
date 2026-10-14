@@ -550,9 +550,9 @@ export function pMapIterable(
 	};
 }
 
-export const pMapSkip = Symbol('skip');
+export const pMapSkip = Symbol('pMapSkip');
 
-export const pMapStop = Symbol('stop');
+export const pMapStop = Symbol('pMapStop');
 
 // The checks `pMap` and `pMapIterable` share, so both reject the same input the same way.
 // `mapConcurrently` runs this inside its promise, so a bad argument rejects rather than throws.
