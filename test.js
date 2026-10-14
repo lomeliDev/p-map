@@ -270,6 +270,12 @@ test('async with concurrency: 2 (out of order time sequence)', async t => {
 	t.deepEqual(result, input);
 });
 
+test('pMapIterable rejects options that do not apply to it', t => {
+	const {signal} = new AbortController();
+	t.throws(() => pMapIterable([], () => {}, {signal}), {instanceOf: TypeError, message: /signal/});
+	t.throws(() => pMapIterable([], () => {}, {stopOnError: false}), {instanceOf: TypeError, message: /stopOnError/});
+});
+
 test('enforce number in options.concurrency', async t => {
 	await t.throwsAsync(pMap([], () => {}, {concurrency: 0}), {instanceOf: TypeError});
 	await t.throwsAsync(pMap([], () => {}, {concurrency: 1.5}), {instanceOf: TypeError});
