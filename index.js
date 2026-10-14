@@ -281,15 +281,21 @@ async function mapConcurrently(
 	});
 }
 
-export function pMapIterable(
-	iterable,
-	mapper,
-	{
+export function pMapIterable(iterable, mapper, options = {}) {
+	if ('signal' in options) {
+		throw new TypeError('The `signal` option is not supported by `pMapIterable`');
+	}
+
+	if ('stopOnError' in options) {
+		throw new TypeError('The `stopOnError` option is not supported by `pMapIterable`');
+	}
+
+	const {
 		concurrency = Number.POSITIVE_INFINITY,
 		backpressure = concurrency,
 		preserveOrder = true,
-	} = {},
-) {
+	} = options;
+
 	validateOptions(iterable, mapper, concurrency);
 
 	if (!isLimit(backpressure, concurrency)) {
