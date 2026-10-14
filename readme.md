@@ -192,6 +192,19 @@ Minimum: `1`
 
 Number of concurrently pending promises returned by `mapper`.
 
+```js
+import pMap from 'p-map';
+import delay from 'delay';
+
+const result = await pMap([300, 200, 100], async milliseconds => {
+	await delay(milliseconds);
+	return milliseconds;
+}, {concurrency: 2});
+
+console.log(result);
+//=> [300, 200, 100]
+```
+
 The right value depends on the work. Rules of thumb:
 
 - Network or database: the pool size or rate limit of the other side.
