@@ -23,6 +23,8 @@ async function mapKeyed(input, mapper, options, isSettled) {
 		throw new TypeError('Mapper function is required');
 	}
 
+	validateDisallowedOptions(options, isSettled);
+
 	const mappedEntries = await mapConcurrently(entries, async ([key, inputResult]) => {
 		try {
 			if (inputResult.status === 'rejected') {
@@ -57,15 +59,17 @@ async function mapKeyed(input, mapper, options, isSettled) {
 async function mapConcurrently(
 	iterable,
 	mapper,
-	{
+	options = {},
+	isSettled,
+) {
+	const {
 		concurrency = Number.POSITIVE_INFINITY,
 		stopOnError = true,
 		signal,
-	} = {},
-	isSettled,
-) {
+	} = options;
+
 	return new Promise((resolve_, reject_) => {
-		validateOptions(iterable, mapper, concurrency, signal);
+		validateOptions(iterable, mapper, concurrency, signal, options, isSettled);
 
 		const result = [];
 		// Stage the errors by index, like `result`, so they are reported in input order.
@@ -564,10 +568,26 @@ export const pMapSkip = Symbol('pMapSkip');
 
 export const pMapStop = Symbol('pMapStop');
 
+function validateDisallowedOptions(options, isSettled) {
+	if (!options) {
+		return;
+	}
+
+	const disallowed = isSettled
+		? ['backpressure', 'preserveOrder', 'stopOnError']
+		: ['backpressure', 'preserveOrder'];
+
+	for (const option of disallowed) {
+		if (option in options) {
+			throw new TypeError(`The \`${option}\` option is not supported`);
+		}
+	}
+}
+
 // The checks `pMap` and `pMapIterable` share, so both reject the same input the same way.
 // `mapConcurrently` runs this inside its promise, so a bad argument rejects rather than throws.
 // `signal` is only for the functions that take it, so `pMapIterable` leaves it `undefined` and skips the check.
-function validateOptions(iterable, mapper, concurrency, signal) {
+function validateOptions(iterable, mapper, concurrency, signal, options, isSettled) {
 	// Optional chaining, so a nullish input gets this message rather than Node's internal
 	// "null is not iterable".
 	if (iterable?.[Symbol.iterator] === undefined && iterable?.[Symbol.asyncIterator] === undefined) {
@@ -586,6 +606,8 @@ function validateOptions(iterable, mapper, concurrency, signal) {
 	if (signal !== undefined && !(signal instanceof AbortSignal)) {
 		throw new TypeError(`Expected \`signal\` to be an \`AbortSignal\`, got \`${signal}\` (${typeof signal})`);
 	}
+
+	validateDisallowedOptions(options, isSettled);
 }
 
 // Whether the value is an integer from `minimum` and up, or `Infinity`, as `concurrency` and `backpressure` must be.
