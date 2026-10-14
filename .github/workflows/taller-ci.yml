@@ -1,0 +1,17 @@
+name: taller-ci
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    name: Node.js 22
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npx xo
+      - run: npx ava
+      - run: npx tsd
