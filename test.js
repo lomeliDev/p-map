@@ -5780,6 +5780,31 @@ test('pMap - invalid arguments reject instead of throwing, and do not start iter
 	t.is(iteratorCalls, 0);
 });
 
+// A non-`AbortSignal` used to reach `signal.addEventListener` and throw a cryptic "addEventListener is not a function" that did not name the option.
+test('pMap - a `signal` that is not an `AbortSignal` is rejected with a clear message', async t => {
+	const expectedMessage = 'Expected `signal` to be an `AbortSignal`, got `[object Object]` (object)';
+
+	for (const [method, input] of [
+		[pMap, [1]],
+		[pMapSettled, [1]],
+		[pMapKeyed, {a: 1}],
+		[pMapSettledKeyed, {a: 1}],
+	]) {
+		// eslint-disable-next-line no-await-in-loop
+		await t.throwsAsync(method(input, async value => value, {signal: {}}), {
+			instanceOf: TypeError,
+			message: expectedMessage,
+		});
+	}
+});
+
+test('pMap - `signal: undefined` and a valid `AbortSignal` are still accepted', async t => {
+	const abortController = new AbortController();
+
+	t.deepEqual(await pMap([1, 2], value => value, {signal: undefined}), [1, 2]);
+	t.deepEqual(await pMap([1, 2], value => value, {signal: abortController.signal}), [1, 2]);
+});
+
 test('pMap - an already aborted signal does not pull from the source or call the mapper', async t => {
 	for (const method of [pMap, pMapSettled]) {
 		const source = countingSource();
