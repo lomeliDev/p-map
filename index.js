@@ -296,6 +296,10 @@ export function pMapIterable(
 		throw new TypeError(`Expected \`backpressure\` to be an integer from \`concurrency\` (${concurrency}) and up or \`Infinity\`, got \`${backpressure}\` (${typeof backpressure})`);
 	}
 
+	if (typeof preserveOrder !== 'boolean') {
+		throw new TypeError(`Expected \`preserveOrder\` to be a boolean, got \`${preserveOrder}\` (${typeof preserveOrder})`);
+	}
+
 	return {
 		[Symbol.asyncIterator]() {
 			// `isDone` lives outside the generator so the wrapper below can set it the moment the

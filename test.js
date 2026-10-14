@@ -1601,6 +1601,11 @@ test('pMapIterable - enforce the options', t => {
 	t.notThrows(() => pMapIterable([], () => {}, {concurrency: 2, backpressure: 2}));
 	t.notThrows(() => pMapIterable([], () => {}, {concurrency: 2, backpressure: 10}));
 	t.notThrows(() => pMapIterable([], () => {}, {concurrency: Number.POSITIVE_INFINITY, backpressure: Number.POSITIVE_INFINITY}));
+
+	t.throws(() => pMapIterable([], () => {}, {preserveOrder: 'false'}), {instanceOf: TypeError});
+	t.throws(() => pMapIterable([], () => {}, {preserveOrder: 1}), {instanceOf: TypeError});
+	t.notThrows(() => pMapIterable([], () => {}, {preserveOrder: false}));
+	t.notThrows(() => pMapIterable([], () => {}, {preserveOrder: undefined}));
 });
 
 test('pMapIterable - empty', async t => {
