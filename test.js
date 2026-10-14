@@ -4676,18 +4676,11 @@ test('pMapSettled - validates the arguments', async t => {
 	await t.throwsAsync(pMapSettled([], value => value, {concurrency: 0}), {instanceOf: TypeError});
 });
 
-test('pMapSettled - ignores `stopOnError: false`', async t => {
-	const error = new Error('one');
-
-	const results = await pMapSettled([1, 2], async value => {
-		if (value === 1) {
-			throw error;
-		}
-
-		return value;
-	}, {stopOnError: false});
-
-	t.deepEqual(results, [rejected(error), fulfilled(2)]);
+test('pMapSettled - rejects `stopOnError` option', async t => {
+	await t.throwsAsync(pMapSettled([1, 2], async value => value, {stopOnError: false}), {
+		instanceOf: TypeError,
+		message: 'The `stopOnError` option is not supported',
+	});
 });
 
 test('pMapSettled - empty input', async t => {
@@ -8680,18 +8673,11 @@ test('pMapSettledKeyed - an abort rejects even when the keys before it have alre
 	release('b');
 });
 
-test('pMapSettledKeyed - ignores `stopOnError: false`', async t => {
-	const error = new Error('a');
-
-	const result = await pMapSettledKeyed({a: 1, b: 2}, (value, key) => {
-		if (key === 'a') {
-			throw error;
-		}
-
-		return value;
-	}, {stopOnError: false});
-
-	t.deepEqual(result, {a: rejected(error), b: fulfilled(2)});
+test('pMapSettledKeyed - rejects `stopOnError` option', async t => {
+	await t.throwsAsync(pMapSettledKeyed({a: 1, b: 2}, async value => value, {stopOnError: false}), {
+		instanceOf: TypeError,
+		message: 'The `stopOnError` option is not supported',
+	});
 });
 
 test('pMapSettledKeyed - validates `concurrency`', async t => {
@@ -9083,3 +9069,12 @@ test('pMapIterable - a pull that rejects after the source reported `done` is dro
 
 	t.deepEqual(await valuesPromise, [0, 1, 2, 3]);
 });
+
+test('the promise-returning functions reject options that do not apply', async t => {
+	await t.throwsAsync(pMap([1], async v => v, {backpressure: 1}), {instanceOf: TypeError, message: /backpressure/});
+	await t.throwsAsync(pMap([1], async v => v, {preserveOrder: false}), {instanceOf: TypeError, message: /preserveOrder/});
+	await t.throwsAsync(pMapKeyed({a: 1}, async v => v, {backpressure: 1}), {instanceOf: TypeError, message: /backpressure/});
+	await t.throwsAsync(pMapSettled([1], async v => v, {stopOnError: true}), {instanceOf: TypeError, message: /stopOnError/});
+	await t.throwsAsync(pMapSettledKeyed({a: 1}, async v => v, {preserveOrder: false}), {instanceOf: TypeError, message: /preserveOrder/});
+});
+
