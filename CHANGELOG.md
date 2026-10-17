@@ -2,6 +2,10 @@
 
 ## Sin publicar (rama `rel-dev`)
 
+## 7.1.4 — 2026-10-17
+
+- fix(core): (ensayo) el filtrado de pMapSkip del resultado, ROTO a propósito para probar la vuelta atrás automática (#3)
+
 ## 7.1.3 — 2026-10-17
 
 - fix(docs): el readme dice el valor por omisión de stopOnError (#2)

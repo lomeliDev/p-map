@@ -1,6 +1,6 @@
 {
 	"name": "p-map",
-	"version": "7.1.3",
+	"version": "7.1.4",
 	"description": "Map over promises concurrently",
 	"license": "MIT",
 	"repository": "sindresorhus/p-map",
