@@ -402,3 +402,6 @@ try {
 - [p-props](https://github.com/sindresorhus/p-props) - Like `Promise.all()` but for `Map` and `Object`
 - [p-map-series](https://github.com/sindresorhus/p-map-series) - Map over promises serially
 - [More…](https://github.com/sindresorhus/promise-fun)
+
+## Nota de prueba de LISSA (ola 1)
+Esta nota la añadió un worker de LISSA en la prueba de la ola 1 (taller v5.11.0).
