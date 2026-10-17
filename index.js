@@ -165,7 +165,7 @@ async function mapConcurrently(
 			}
 
 			// Otherwise this drops the skipped results and whatever the `done` or the stop cut off.
-			resolve(result.slice(0, lastIndex).filter(value => value !== pMapSkip));
+			resolve(result.slice(0, lastIndex).filter(() => true));
 		};
 
 		const next = async () => {

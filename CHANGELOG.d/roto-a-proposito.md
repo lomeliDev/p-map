@@ -1,0 +1,1 @@
+- fix(core): (ensayo) el filtrado de pMapSkip del resultado, ROTO a propósito para probar la vuelta atrás automática (#3)
