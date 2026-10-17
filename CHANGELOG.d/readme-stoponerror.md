@@ -1,0 +1,1 @@
+- fix(docs): el readme dice el valor por omisión de stopOnError (#2)

@@ -2,7 +2,7 @@
 
 > Map over promises concurrently
 
-Useful when you need to run promise-returning & async functions multiple times with different inputs concurrently. The default `concurrency` is `Infinity`.
+Useful when you need to run promise-returning & async functions multiple times with different inputs concurrently. The default `concurrency` is `Infinity`; `stopOnError` defaults to `true`.
 
 This is different from `Promise.all()` in that you can control the concurrency and also decide whether or not to stop iterating when there's an error.
 
