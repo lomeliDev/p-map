@@ -1,0 +1,1 @@
+- fix(docs): el readme dice cuál es la concurrencia por omisión (Infinity) (#1)
