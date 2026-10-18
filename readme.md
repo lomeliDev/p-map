@@ -35,6 +35,22 @@ console.log(result);
 //=> ['https://sindresorhus.com/', 'https://avajs.dev/', 'https://github.com/']
 ```
 
+To collect errors from all the mapped values, set `stopOnError` to `false`. `pMap` waits for every mapper to settle, then rejects with an `AggregateError` containing the errors:
+
+```js
+try {
+	await pMap(sites, mapper, {concurrency: 2, stopOnError: false});
+} catch (error) {
+	if (error instanceof AggregateError) {
+		for (const mapError of error.errors) {
+			console.error(mapError);
+		}
+	} else {
+		throw error;
+	}
+}
+```
+
 ## API
 
 Except for `pMapIterable`, each function is a version of a `Promise` method that maps each element and limits the concurrency:
